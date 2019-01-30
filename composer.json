@@ -1,0 +1,18 @@
+{
+    "name": "maker55/aliyun",
+    "description": "aliyun video upload",
+    "type": "libray",
+    "authors": [
+        {
+            "name": "maker55",
+            "email": "huko89088@qq.com"
+        }
+    ],
+    "autoload":{
+        "psr-4":{
+         "Aliyun\\":"src/"
+        }
+    },
+    "minimum-stability": "beta",
+    "require": {}
+}

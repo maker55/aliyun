@@ -124,7 +124,7 @@ class AliyunVodUtils
 
 class AliyunVodLog
 {
-    public static $logSwitch = true;
+    public static $logSwitch = false;
 
     public static function printLog($format, $args = null, $_ = null)
     {

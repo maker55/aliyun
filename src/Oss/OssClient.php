@@ -54,45 +54,27 @@ use Aliyun\OSS\Result\UploadPartResult;
 
 class OssClient
 {
-    /**
-     * Constructor
-     *
-     * There're a few different ways to create an OssClient object:
-     * 1. Most common one from access Id, access Key and the endpoint: $ossClient = new OssClient($id, $key, $endpoint)
-     * 2. If the endpoint is the CName (such as www.testoss.com, make sure it's CName binded in the OSS console),
-     *    uses $ossClient = new OssClient($id, $key, $endpoint, true)
-     * 3. If using Alicloud's security token service (STS), then the AccessKeyId, AccessKeySecret and STS token are all got from STS.
-     * Use this: $ossClient = new OssClient($id, $key, $endpoint, false, $token)
-     * 4. If the endpoint is in IP format, you could use this: $ossClient = new OssClient($id, $key, “1.2.3.4:8900”)
-     *
-     * @param string  $accessKeyId     The AccessKeyId from OSS or STS
-     * @param string  $accessKeySecret The AccessKeySecret from OSS or STS
-     * @param string  $endpoint        The domain name of the datacenter,For example: oss-cn-hangzhou.aliyuncs.com
-     * @param boolean $isCName         If this is the CName and binded in the bucket.
-     * @param string  $securityToken   from STS.
-     * @param string  $requestProxy
-     * @throws OssException
-     */
-    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $isCName = false, $securityToken = null, $requestProxy = null)
+    public function __construct($config)
     {
-        $accessKeyId = trim($accessKeyId);
-        $accessKeySecret = trim($accessKeySecret);
-        $endpoint = trim(trim($endpoint), "/");
+        $this->accessKeyId = trim($config['accesskey']);
+        $this->accessKeySecret = trim($config['accesssecret']);
 
-        if (empty($accessKeyId)) {
+        $this->securityToken = $config['securityToken'] ?? null;
+        $this->requestProxy = $config['requestProxy'] ?? null;
+
+        $endpoint = trim(trim($config['endpoint']), "/");
+
+        if (empty($this->accessKeyId)) {
             throw new OssException("access key id is empty");
         }
-        if (empty($accessKeySecret)) {
+        if (empty($this->accessKeySecret)) {
             throw new OssException("access key secret is empty");
         }
         if (empty($endpoint)) {
             throw new OssException("endpoint is empty");
         }
-        $this->hostname = $this->checkEndpoint($endpoint, $isCName);
-        $this->accessKeyId = $accessKeyId;
-        $this->accessKeySecret = $accessKeySecret;
-        $this->securityToken = $securityToken;
-        $this->requestProxy = $requestProxy;
+        $this->hostname = $this->checkEndpoint($endpoint, $config['isCName']);
+
         self::checkEnv();
     }
 

@@ -1,17 +1,17 @@
 <?php
+
 namespace Aliyun\Core\Regions;
 
 use Aliyun\Core\Http\HttpHelper;
 use Aliyun\Core\RpcAcsRequest;
 
-
-
 class DescribeEndpointRequest extends RpcAcsRequest
 {
-    const LOCATION_SERVICE_PRODUCT_NAME='Location';
-    const LOCATION_SERVICE_VERSION='2015-06-12';
-    const LOCATION_SERVICE_DESCRIBE_ENDPOINT_ACTION='DescribeEndpoints';
-    const LOCATION_SERVICE_REGION='cn-hangzhou';
+    const LOCATION_SERVICE_PRODUCT_NAME = 'Location';
+    const LOCATION_SERVICE_VERSION = '2015-06-12';
+    const LOCATION_SERVICE_DESCRIBE_ENDPOINT_ACTION = 'DescribeEndpoints';
+    const LOCATION_SERVICE_REGION = 'cn-hangzhou';
+
     function __construct($id, $serviceCode, $endPointType)
     {
         parent::__construct(LOCATION_SERVICE_PRODUCT_NAME, LOCATION_SERVICE_VERSION, LOCATION_SERVICE_DESCRIBE_ENDPOINT_ACTION);
@@ -28,8 +28,8 @@ class DescribeEndpointRequest extends RpcAcsRequest
 class LocationService
 {
     private $clientProfile;
-    public static $cache = array();
-    public static $lastClearTimePerProduct = array();
+    public static $cache = [];
+    public static $lastClearTimePerProduct = [];
     public static $serviceDomain = "location.aliyuncs.com";
 
     function __construct($clientProfile)
@@ -39,7 +39,7 @@ class LocationService
 
     public function findProductDomain($regionId, $serviceCode, $endPointType, $product)
     {
-        $key = $regionId . '#' . $product;
+        $key = $regionId.'#'.$product;
 
         @$domain = self::$cache[$key];
         if ($domain == null || $this->checkCacheIsExpire($key) == true) {
@@ -52,7 +52,7 @@ class LocationService
 
     public static function addEndPoint($regionId, $product, $domain)
     {
-        $key = $regionId . '#' . $product;
+        $key = $regionId.'#'.$product;
         self::$cache[$key] = $domain;
         $lastClearTime = mktime(0, 0, 0, 1, 1, 2999);
         self::$lastClearTimePerProduct[$key] = $lastClearTime;
@@ -94,7 +94,7 @@ class LocationService
 
         $httpResponse = HttpHelper::curl($requestUrl, $request->getMethod(), null, $request->getHeaders());
 
-        if (!$httpResponse->isSuccess()) {
+        if (! $httpResponse->isSuccess()) {
             return null;
         }
 
